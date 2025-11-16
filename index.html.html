@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifted Observation Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        section {
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h3 {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        input[type="text"], input[type="date"], textarea, select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            min-width: auto;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+            min-width: auto;
+            min-height: auto;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .student-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .student-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #667eea;
+        }
+        
+        .student-card .placeholder-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+        
+        .student-card p {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .activity-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .activity-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .activity-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .activity-card .meta {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .observation-grid {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            background: white;
+        }
+        
+        tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+        
+        .checkbox-cell {
+            text-align: center;
+            padding: 8px;
+        }
+        
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        
+        .total-column {
+            background: #e7f1ff !important;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background: #e7f1ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .student-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .nav-tab {
+                font-size: 14px;
+                padding: 12px 8px;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .btn, .nav-tabs {
+                display: none;
+            }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 90%;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #667eea;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6c757d;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .close-btn:hover {
+            color: #dc3545;
+        }
+        
+        .documentation-section {
+            margin-top: 20px;
+        }
+        
+        .doc-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .doc-input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .doc-input-group textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .photo-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e9ecef;
+            background: #f8f9fa;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .photo-caption {
+            padding: 8px;
+            font-size: 12px;
+            color: #666;
+            background: white;
+        }
+        
+        .photo-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .photo-delete:hover {
+            background: rgba(220, 53, 69, 1);
+        }
+        
+        .no-photos {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .observation-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .observation-summary h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .activity-observation {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .activity-observation strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 Gifted Observation Tracker</h1>
+            <p>Comprehensive Documentation System for Second Grade</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="nav-tab" onclick="switchTab('students')">👥 Students</button>
+            <button class="nav-tab" onclick="switchTab('activities')">📚 Activities</button>
+            <button class="nav-tab" onclick="switchTab('observations')">✅ Observations</button>
+            <button class="nav-tab" onclick="switchTab('reports')">📈 Reports</button>
+        </div>
+        
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <h2>Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-students">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-activities">0</div>
+                        <div class="stat-label">Activities Created</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-observations">0</div>
+                        <div class="stat-label">Total Observations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-sessions">0</div>
+                        <div class="stat-label">Observation Sessions</div>
+                    </div>
+                </div>
+                
+                <section>
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity-list">
+                        <div class="empty-state">
+                            <p>No activities yet</p>
+                            <p style="font-size: 14px;">Start by adding students and creating activities!</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Quick Actions</h3>
+                    <div class="input-group">
+                        <button class="btn btn-primary" onclick="switchTab('students')">➕ Add Students</button>
+                        <button class="btn btn-primary" onclick="switchTab('activities')">📝 Create Activity</button>
+                        <button class="btn btn-success" onclick="exportAllData()">💾 Export All Data</button>
+                        <button class="btn btn-secondary" onclick="importData()">📥 Import Data</button>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Students Tab -->
+            <div id="students-tab" class="tab-content">
+                <h2>Student Roster</h2>
+                
+                <div class="alert alert-info">
+                    <strong>💡 Tip:</strong> Click on any student card to add documentation photos, notes, and view their observation summary!
+                </div>
+                
+                <section>
+                    <div class="input-group">
+                        <input type="text" id="studentName" placeholder="Student name" aria-label="Student name">
+                        <label for="photoUpload" class="btn btn-secondary">📷 Upload Photo</label>
+                        <input type="file" id="photoUpload" accept="image/*" aria-label="Upload student photo">
+                        <button class="btn btn-primary" onclick="addStudent()">➕ Add Student</button>
+                    </div>
+                    
+                    <div class="student-grid" id="studentList">
+                        <div class="empty-state">
+                            <p>No students added yet</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Activities Tab -->
+            <div id="activities-tab" class="tab-content">
+                <h2>Activities</h2>
+                
+                <div class="alert alert-info">
+                    <strong>📚 Arkansas GT Standards (K-4):</strong> Arkansas identifies gifted students through three components:
+                    <strong>(1) Above Average Intellectual Ability</strong>, <strong>(2) Task Commitment/Motivation</strong>, and <strong>(3) Creative Ability</strong>.
+                    Select your grade level, then use the dropdown to load developmentally appropriate, standards-aligned characteristics!
+                </div>
+                
+                <section>
+                    <div class="card">
+                        <h3>📤 Upload Existing Lesson (Optional)</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Have an existing lesson? Upload it here to quickly add observable characteristics.</p>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Lesson Title:</label>
+                            <input type="text" id="uploadTitle" placeholder="e.g., 'Pattern Detective Activity'" style="width: 100%;">
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Subject:</label>
+                            <select id="uploadSubject" style="width: 100%;">
+                                <option value="">Select subject...</option>
+                                <option value="Math">Math</option>
+                                <option value="Reading">Reading</option>
+                                <option value="Writing">Writing</option>
+                                <option value="Science">Science</option>
+                                <option value="Social Studies">Social Studies</option>
+                                <option value="Art">Art</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Upload Lesson File (optional):</label>
+                            <input type="file" id="lessonFileUpload" accept=".txt" style="display: block; margin-bottom: 10px;">
+                            <small style="color: #666;">Supported: Text files (.txt) only<br>
+                            <strong>For Word/PDF:</strong> Open your file, copy the text, and paste it below ↓</small>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Or Paste Lesson Content:</label>
+                            <textarea id="uploadContent" placeholder="Paste your lesson plan here, or upload a file above..." style="width: 100%; min-height: 150px;"></textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Select Observable Characteristics:</label>
+                            <select id="uploadGradeLevel" onchange="document.getElementById('uploadStandards').value = ''" style="width: 100%; margin-bottom: 10px;">
+                                <option value="">Select Grade Level...</option>
+                                <option value="K">Kindergarten</option>
+                                <option value="1">First Grade</option>
+                                <option value="2" selected>Second Grade</option>
+                                <option value="3">Third Grade</option>
+                                <option value="4">Fourth Grade</option>
+                            </select>
+                            <select id="uploadStandards" onchange="loadStandardsForUpload()" style="width: 100%; margin-bottom: 10px;">
+                                <option value="">📋 Load Arkansas GT Standards...</option>
+                                <option value="intellectual">Above Average Intellectual Ability</option>
+                                <option value="task">Task Commitment & Motivation</option>
+                                <option value="creative">Creative Ability</option>
+                                <option value="all">All Three Components</option>
+                            </select>
+                            <textarea id="uploadCharacteristics" placeholder="List observable characteristics (one per line)" style="width: 100%; min-height: 100px;"></textarea>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="saveUploadedLesson()">💾 Save Lesson as Activity</button>
+                    </div>
+                </section>
+                
+                <section>
+                    <div class="card">
+                        <h3>Create New Activity</h3>
+                        <div class="input-group">
+                            <input type="text" id="activityName" placeholder="Activity name" style="flex: 2;">
+                            <select id="activitySubject">
+                                <option value="">Select subject...</option>
+                                <option value="Math">Math</option>
+                                <option value="Reading">Reading</option>
+                                <option value="Writing">Writing</option>
+                                <option value="Science">Science</option>
+                                <option value="Social Studies">Social Studies</option>
+                                <option value="Art">Art</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="date" id="activityDate">
+                        </div>
+                        <textarea id="activityDescription" placeholder="Activity description and instructions..."></textarea>
+                        <div style="margin-top: 15px;">
+                            <h4 style="font-size: 16px; margin-bottom: 10px;">Observable Characteristics</h4>
+                            <div class="input-group">
+                                <select id="gradeLevel" onchange="updateStandardsDropdown()" style="flex: 1;">
+                                    <option value="">Select Grade Level...</option>
+                                    <option value="K">Kindergarten</option>
+                                    <option value="1">First Grade</option>
+                                    <option value="2" selected>Second Grade</option>
+                                    <option value="3">Third Grade</option>
+                                    <option value="4">Fourth Grade</option>
+                                </select>
+                                <select id="arkansasStandards" onchange="loadArkansasStandards()" style="flex: 1;">
+                                    <option value="">📋 Load Arkansas GT Standards...</option>
+                                    <option value="intellectual">Above Average Intellectual Ability</option>
+                                    <option value="task">Task Commitment & Motivation</option>
+                                    <option value="creative">Creative Ability</option>
+                                    <option value="all">All Three Components</option>
+                                </select>
+                                <button class="btn btn-secondary" onclick="clearCharacteristics()">Clear</button>
+                            </div>
+                            <textarea id="activityCharacteristics" placeholder="Type custom characteristics (one per line) or use Arkansas GT Standards dropdown above
+
+Example:
+Uses advanced vocabulary precisely
+Creates complex, original solutions
+Demonstrates sustained focus on task"></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="createActivity()" style="margin-top: 15px;">Create Activity</button>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Saved Activities</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="empty-state">
+                            <p>No activities created yet</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Observations Tab -->
+            <div id="observations-tab" class="tab-content">
+                <h2>Conduct Observations</h2>
+                
+                <div id="observation-container">
+                    <div class="empty-state">
+                        <p>Select an activity to begin observations</p>
+                        <button class="btn btn-primary" onclick="switchTab('activities')">Go to Activities</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content">
+                <h2>Reports & Export</h2>
+                
+                <section>
+                    <h3>Export Options</h3>
+                    <div class="input-group">
+                        <button class="btn btn-success" onclick="exportAllData()">📥 Export All Data (JSON)</button>
+                        <button class="btn btn-success" onclick="exportStudentSummary()">📊 Export Student Summary (CSV)</button>
+                        <button class="btn btn-success" onclick="exportActivityReport()">📋 Export Activity Report (CSV)</button>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Import Data</h3>
+                    <div class="alert alert-info">
+                        <strong>Import Previous Data:</strong> Upload a previously exported JSON file to restore all your students, activities, and observations.
+                    </div>
+                    <input type="file" id="importFile" accept=".json" onchange="handleImport(event)" style="display: none;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import Data File</button>
+                </section>
+                
+                <section>
+                    <h3>Student Summaries</h3>
+                    <div id="student-summaries">
+                        <div class="empty-state">
+                            <p>No observation data yet</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Student Documentation Modal -->
+    <div id="studentModal" class="modal" onclick="if(event.target === this) closeStudentModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalStudentName">Student Documentation</h3>
+                <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+            </div>
+            
+            <div class="observation-summary" id="modalObservationSummary">
+                <!-- Summary will be inserted here -->
+            </div>
+            
+            <div class="documentation-section">
+                <h4>📸 Photo Documentation</h4>
+                <div class="input-group" style="margin-top: 15px;">
+                    <label for="docPhotoUpload" class="btn btn-primary">📷 Add Photo</label>
+                    <input type="file" id="docPhotoUpload" accept="image/*" aria-label="Upload documentation photo">
+                </div>
+                
+                <div class="doc-input-group">
+                    <label for="photoNote">Photo Description/Notes:</label>
+                    <textarea id="photoNote" placeholder="Describe what this photo shows (e.g., 'Student solving pattern problem independently')"></textarea>
+                </div>
+                
+                <button class="btn btn-success" onclick="addDocumentationPhoto()">Save Photo & Note</button>
+                
+                <div class="photo-gallery" id="photoGallery">
+                    <div class="no-photos">No documentation photos yet</div>
+                </div>
+            </div>
+            
+            <div class="documentation-section">
+                <h4>📝 General Notes</h4>
+                <div class="doc-input-group">
+                    <textarea id="studentNotes" placeholder="General observations, anecdotes, or additional notes about this student..." style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveStudentNotes()">Save Notes</button>
+            </div>
+            
+            <div style="margin-top: 30px; display: flex; gap: 10px;">
+                <button class="btn btn-success" onclick="exportStudentDocumentation()">💾 Export This Student's Data</button>
+                <button class="btn btn-secondary" onclick="closeStudentModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data storage
+        let students = [];
+        let activities = [];
+        let observations = {};
+        let studentDocumentation = {}; // { studentId: { photos: [], notes: '' } }
+        let currentPhoto = null;
+        let currentStudent = null;
+        let currentDocPhoto = null;
+        let currentActivity = null;
+        
+        // Arkansas Gifted & Talented Standards
+        // Based on Arkansas Department of Education three-component definition
+        // Characteristics adapted for developmental appropriateness by grade level
+        const arkansasGTStandards = {
+            K: {
+                intellectual: [
+                    "Shows curiosity and asks 'why' questions frequently",
+                    "Learns letter sounds and numbers quickly",
+                    "Remembers details from stories",
+                    "Recognizes patterns in everyday situations",
+                    "Understands concepts with fewer examples",
+                    "Uses reasoning to solve simple problems",
+                    "Shows advanced oral vocabulary for age",
+                    "Makes connections between ideas"
+                ],
+                task: [
+                    "Stays focused on activities of interest",
+                    "Completes puzzles or tasks independently",
+                    "Shows pride in finished work",
+                    "Returns to unfinished activities",
+                    "Persists when tasks are challenging",
+                    "Prefers activities that require thinking",
+                    "Works carefully with attention to detail",
+                    "Shows enthusiasm for learning new things"
+                ],
+                creative: [
+                    "Tells imaginative stories",
+                    "Builds unique structures with blocks",
+                    "Uses art materials in original ways",
+                    "Pretends and role-plays elaborately",
+                    "Asks 'what if' questions",
+                    "Finds new uses for familiar objects",
+                    "Makes up games with own rules",
+                    "Shows humor and playfulness with ideas"
+                ]
+            },
+            1: {
+                intellectual: [
+                    "Reads above grade level independently",
+                    "Grasps math concepts quickly with minimal practice",
+                    "Asks probing questions beyond the lesson",
+                    "Remembers and applies information from previous lessons",
+                    "Recognizes patterns in numbers, words, and stories",
+                    "Makes logical predictions and inferences",
+                    "Uses expanded vocabulary naturally",
+                    "Connects learning across different subjects"
+                ],
+                task: [
+                    "Maintains focus for extended periods on preferred tasks",
+                    "Shows determination with challenging work",
+                    "Sets own goals for learning or projects",
+                    "Takes initiative in starting activities",
+                    "Checks work for accuracy",
+                    "Finishes projects thoroughly",
+                    "Seeks challenging books or activities",
+                    "Shows internal motivation to learn"
+                ],
+                creative: [
+                    "Writes original and detailed stories",
+                    "Creates elaborate artwork with multiple elements",
+                    "Finds multiple solutions to problems",
+                    "Makes unexpected connections between ideas",
+                    "Designs games or activities for others",
+                    "Uses materials in innovative ways",
+                    "Adds unique details to assignments",
+                    "Shows original thinking in responses"
+                ]
+            },
+            2: {
+                intellectual: [
+                    "Demonstrates advanced reasoning and problem-solving",
+                    "Grasps complex concepts quickly",
+                    "Shows exceptional memory and recall",
+                    "Thinks abstractly beyond grade level",
+                    "Recognizes patterns and makes connections",
+                    "Asks probing, insightful questions",
+                    "Learns and applies new information rapidly",
+                    "Shows advanced vocabulary for age"
+                ],
+                task: [
+                    "Demonstrates sustained focus and concentration",
+                    "Shows persistence with challenging tasks",
+                    "Exhibits internal motivation and self-direction",
+                    "Sets and pursues own learning goals",
+                    "Pays attention to detail and accuracy",
+                    "Completes work thoroughly",
+                    "Shows commitment to area of interest",
+                    "Returns to unfinished work independently"
+                ],
+                creative: [
+                    "Generates original and unusual ideas",
+                    "Shows imaginative thinking",
+                    "Finds multiple solutions to problems",
+                    "Elaborates on ideas with rich detail",
+                    "Makes unexpected connections",
+                    "Experiments playfully with concepts",
+                    "Takes creative risks in thinking",
+                    "Produces unique work or responses"
+                ]
+            },
+            3: {
+                intellectual: [
+                    "Analyzes complex problems systematically",
+                    "Understands abstract mathematical concepts",
+                    "Makes sophisticated inferences in reading",
+                    "Applies learning to new situations independently",
+                    "Synthesizes information from multiple sources",
+                    "Questions assumptions and seeks evidence",
+                    "Uses advanced vocabulary precisely",
+                    "Recognizes cause-effect relationships across contexts"
+                ],
+                task: [
+                    "Pursues topics in depth over extended time",
+                    "Shows exceptional persistence with complex challenges",
+                    "Sets ambitious personal learning goals",
+                    "Manages long-term projects independently",
+                    "Demonstrates perfectionist tendencies positively",
+                    "Seeks feedback to improve work",
+                    "Shows passion for area of expertise",
+                    "Maintains high standards for own work"
+                ],
+                creative: [
+                    "Develops original approaches to assignments",
+                    "Creates complex stories with subplots",
+                    "Designs sophisticated projects independently",
+                    "Combines ideas from different domains",
+                    "Takes intellectual risks in problem-solving",
+                    "Shows advanced sense of humor and wordplay",
+                    "Generates many alternatives before deciding",
+                    "Transforms ideas in unique ways"
+                ]
+            },
+            4: {
+                intellectual: [
+                    "Evaluates arguments and evidence critically",
+                    "Understands metaphorical and symbolic thinking",
+                    "Solves multi-step problems with complex variables",
+                    "Transfers learning across disciplines effectively",
+                    "Identifies patterns in abstract systems",
+                    "Formulates and tests hypotheses independently",
+                    "Uses subject-specific vocabulary accurately",
+                    "Makes sophisticated conceptual connections"
+                ],
+                task: [
+                    "Demonstrates exceptional commitment to passion areas",
+                    "Persists through extended complex projects",
+                    "Shows intrinsic motivation for intellectual growth",
+                    "Manages multiple priorities effectively",
+                    "Seeks increasingly difficult challenges",
+                    "Reflects on and improves own learning process",
+                    "Shows leadership in collaborative projects",
+                    "Maintains focus despite distractions or setbacks"
+                ],
+                creative: [
+                    "Generates innovative solutions to real-world problems",
+                    "Creates multi-layered narratives or designs",
+                    "Challenges conventional approaches constructively",
+                    "Synthesizes ideas in original ways",
+                    "Shows advanced creative expression in chosen medium",
+                    "Asks provocative 'what if' questions",
+                    "Develops elaborate systems or inventions",
+                    "Demonstrates flexible thinking with multiple perspectives"
+                ]
+            }
+        };
+        
+        // Current selected grade level
+        let currentGradeLevel = '2';
+        
+        // Update standards dropdown when grade level changes
+        function updateStandardsDropdown() {
+            const gradeSelect = document.getElementById('gradeLevel');
+            currentGradeLevel = gradeSelect.value || '2';
+            
+            // Reset the standards dropdown
+            document.getElementById('arkansasStandards').value = '';
+        }
+        
+        // Load Arkansas GT Standards into textarea
+        function loadArkansasStandards() {
+            const select = document.getElementById('arkansasStandards');
+            const textarea = document.getElementById('activityCharacteristics');
+            const value = select.value;
+            
+            if (!value) return;
+            
+            const gradeData = arkansasGTStandards[currentGradeLevel] || arkansasGTStandards['2'];
+            let characteristics = [];
+            
+            if (value === 'all') {
+                characteristics = [
+                    ...gradeData.intellectual,
+                    ...gradeData.task,
+                    ...gradeData.creative
+                ];
+            } else {
+                characteristics = gradeData[value];
+            }
+            
+            textarea.value = characteristics.join('\n');
+            select.value = ''; // Reset dropdown
+        }
+        
+        // Clear characteristics
+        function clearCharacteristics() {
+            document.getElementById('activityCharacteristics').value = '';
+        }
+        
+        // Load standards for upload
+        function loadStandardsForUpload() {
+            const select = document.getElementById('uploadStandards');
+            const textarea = document.getElementById('uploadCharacteristics');
+            const gradeSelect = document.getElementById('uploadGradeLevel');
+            const value = select.value;
+            const gradeLevel = gradeSelect.value || '2';
+            
+            if (!value) return;
+            
+            const gradeData = arkansasGTStandards[gradeLevel] || arkansasGTStandards['2'];
+            let characteristics = [];
+            
+            if (value === 'all') {
+                characteristics = [
+                    ...gradeData.intellectual,
+                    ...gradeData.task,
+                    ...gradeData.creative
+                ];
+            } else {
+                characteristics = gradeData[value];
+            }
+            
+            textarea.value = characteristics.join('\n');
+            select.value = '';
+        }
+        
+        // Handle lesson file upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('lessonFileUpload');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const content = event.target.result;
+                            document.getElementById('uploadContent').value = content;
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+            }
+        });
+        
+        // Save uploaded lesson
+        function saveUploadedLesson() {
+            const title = document.getElementById('uploadTitle').value.trim();
+            const subject = document.getElementById('uploadSubject').value;
+            const content = document.getElementById('uploadContent').value.trim();
+            const charText = document.getElementById('uploadCharacteristics').value.trim();
+            
+            if (!title || !subject || !content || !charText) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Populate the manual activity creator
+            document.getElementById('activityName').value = title;
+            document.getElementById('activitySubject').value = subject;
+            document.getElementById('activityDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('activityDescription').value = content;
+            document.getElementById('activityCharacteristics').value = charText;
+            
+            // Clear upload form
+            document.getElementById('uploadTitle').value = '';
+            document.getElementById('uploadSubject').value = '';
+            document.getElementById('uploadContent').value = '';
+            document.getElementById('uploadCharacteristics').value = '';
+            document.getElementById('lessonFileUpload').value = '';
+            
+            // Scroll to manual creator
+            document.querySelector('#activities-tab .card:last-of-type').scrollIntoView({ behavior: 'smooth' });
+            
+            alert('📤 Lesson uploaded! Review below and click "Create Activity" to save.');
+        }
+        
+        // Load data on page load
+        window.onload = function() {
+            loadData();
+            updateDashboard();
+            renderStudents();
+            renderActivities();
+            renderStudentSummaries();
+            
+            // Setup import handler
+            document.getElementById('importFile').addEventListener('change', handleImport);
+        };
+        
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Highlight nav tab
+            event.target.classList.add('active');
+            
+            // Update content
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            } else if (tabName === 'reports') {
+                renderStudentSummaries();
+            }
+        }
+        
+        // Update dashboard statistics
+        function updateDashboard() {
+            document.getElementById('stat-students').textContent = students.length;
+            document.getElementById('stat-activities').textContent = activities.length;
+            
+            let totalObs = 0;
+            let totalSessions = 0;
+            Object.values(observations).forEach(activityObs => {
+                totalSessions++;
+                Object.values(activityObs).forEach(studentObs => {
+                    totalObs += Object.values(studentObs).filter(v => v).length;
+                });
+            });
+            
+            document.getElementById('stat-observations').textContent = totalObs;
+            document.getElementById('stat-sessions').textContent = totalSessions;
+            
+            // Recent activity
+            const recentList = document.getElementById('recent-activity-list');
+            if (activities.length === 0) {
+                recentList.innerHTML = `
+                    <div class="empty-state">
+                        <p>No activities yet</p>
+                        <p style="font-size: 14px;">Start by adding students and creating activities!</p>
+                    </div>
+                `;
+            } else {
+                const recent = activities.slice(-5).reverse();
+                recentList.innerHTML = recent.map(act => `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <strong>${act.name}</strong>
+                                <div class="meta">${act.subject} • ${act.date}</div>
+                            </div>
+                            <button class="btn btn-small btn-primary" onclick="startObservation('${act.id}')">Observe</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Photo upload handler
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentPhoto = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add student
+        function addStudent() {
+            const nameInput = document.getElementById('studentName');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                alert('Please enter a student name');
+                return;
+            }
+            
+            if (students.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+                alert('A student with this name already exists');
+                return;
+            }
+            
+            const student = {
+                id: 'student_' + Date.now(),
+                name: name,
+                photo: currentPhoto,
+                dateAdded: new Date().toISOString()
+            };
+            
+            students.push(student);
+            
+            nameInput.value = '';
+            currentPhoto = null;
+            document.getElementById('photoUpload').value = '';
+            
+            saveData();
+            renderStudents();
+            updateDashboard();
+        }
+        
+        // Remove student
+        function removeStudent(studentId) {
+            if (confirm('Are you sure you want to remove this student? All observation data for this student will be deleted.')) {
+                students = students.filter(s => s.id !== studentId);
+                
+                // Remove from all observations
+                Object.keys(observations).forEach(activityId => {
+                    if (observations[activityId][studentId]) {
+                        delete observations[activityId][studentId];
+                    }
+                });
+                
+                saveData();
+                renderStudents();
+                updateDashboard();
+            }
+        }
+        
+        // Render students
+        function renderStudents() {
+            const studentList = document.getElementById('studentList');
+            
+            if (students.length === 0) {
+                studentList.innerHTML = '<div class="empty-state"><p>No students added yet</p></div>';
+                return;
+            }
+            
+            studentList.innerHTML = students.map(student => {
+                const hasDocs = studentDocumentation[student.id] && 
+                               (studentDocumentation[student.id].photos?.length > 0 || 
+                                studentDocumentation[student.id].notes);
+                const docBadge = hasDocs ? '<div style="background: #28a745; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: inline-block; margin-top: 5px;">📸 Docs</div>' : '';
+                
+                return `
+                    <div class="student-card" onclick="openStudentModal('${student.id}')" style="cursor: pointer;">
+                        ${student.photo ? 
+                            `<img src="${student.photo}" alt="${student.name}">` :
+                            `<div class="placeholder-photo">${student.name.charAt(0).toUpperCase()}</div>`
+                        }
+                        <p>${student.name}</p>
+                        ${docBadge}
+                        <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); removeStudent('${student.id}')">Remove</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Create activity
+        function createActivity() {
+            const name = document.getElementById('activityName').value.trim();
+            const subject = document.getElementById('activitySubject').value;
+            const date = document.getElementById('activityDate').value;
+            const description = document.getElementById('activityDescription').value.trim();
+            const charText = document.getElementById('activityCharacteristics').value.trim();
+            
+            if (!name || !subject || !date || !description || !charText) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const characteristics = charText.split('\n').filter(c => c.trim()).map(c => c.trim());
+            
+            if (characteristics.length < 3) {
+                alert('Please add at least 3 observable characteristics');
+                return;
+            }
+            
+            const activity = {
+                id: 'activity_' + Date.now(),
+                name: name,
+                subject: subject,
+                date: date,
+                description: description,
+                characteristics: characteristics,
+                dateCreated: new Date().toISOString()
+            };
+            
+            activities.push(activity);
+            observations[activity.id] = {};
+            
+            // Clear form
+            document.getElementById('activityName').value = '';
+            document.getElementById('activitySubject').value = '';
+            document.getElementById('activityDate').value = '';
+            document.getElementById('activityDescription').value = '';
+            document.getElementById('activityCharacteristics').value = '';
+            
+            saveData();
+            renderActivities();
+            updateDashboard();
+            
+            alert('Activity created successfully!');
+        }
+        
+        // Render activities
+        function renderActivities() {
+            const activityList = document.getElementById('activityList');
+            
+            if (activities.length === 0) {
+                activityList.innerHTML = '<div class="empty-state"><p>No activities created yet</p></div>';
+                return;
+            }
+            
+            activityList.innerHTML = activities.map(act => `
+                <div class="activity-card">
+                    <h4>${act.name}</h4>
+                    <div class="meta">${act.subject} • ${act.date} • ${act.characteristics.length} characteristics</div>
+                    <p style="margin: 10px 0; color: #666;">${act.description.substring(0, 150)}${act.description.length > 150 ? '...' : ''}</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary btn-small" onclick="startObservation('${act.id}')">Conduct Observation</button>
+                        <button class="btn btn-secondary btn-small" onclick="viewActivity('${act.id}')">View Details</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteActivity('${act.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // View activity details
+        function viewActivity(activityId) {
+            const activity = activities.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            alert(`Activity: ${activity.name}\n\nSubject: ${activity.subject}\nDate: ${activity.date}\n\nDescription:\n${activity.description}\n\nCharacteristics:\n${activity.characteristics.map((c, i) => `${i + 1}. ${c}`).join('\n')}`);
+        }
+        
+        // Delete activity
+        function deleteActivity(activityId) {
+            if (confirm('Are you sure you want to delete this activity? All observation data for this activity will be deleted.')) {
+                activities = activities.filter(a => a.id !== activityId);
+                delete observations[activityId];
+                
+                saveData();
+                renderActivities();
+                updateDashboard();
+            }
+        }
+        
+        // Start observation
+        function startObservation(activityId) {
+            if (students.length === 0) {
+                alert('Please add students before conducting observations');
+                switchTab('students');
+                return;
+            }
+            
+            currentActivity = activities.find(a => a.id === activityId);
+            if (!currentActivity) return;
+            
+            // Initialize observations for this activity if needed
+            if (!observations[activityId]) {
+                observations[activityId] = {};
+            }
+            
+            // Switch to observations tab
+            document.querySelector('[onclick="switchTab(\'observations\')"]').click();
+            
+            renderObservationGrid();
+        }
+        
+        // Render observation grid
+        function renderObservationGrid() {
+            const container = document.getElementById('observation-container');
+            
+            if (!currentActivity) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Select an activity to begin observations</p>
+                        <button class="btn btn-primary" onclick="switchTab('activities')">Go to Activities</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const activityObs = observations[currentActivity.id];
+            
+            let html = `
+                <div class="card">
+                    <h3>${currentActivity.name}</h3>
+                    <div class="meta">${currentActivity.subject} • ${currentActivity.date}</div>
+                    <p style="margin: 10px 0;">${currentActivity.description}</p>
+                </div>
+                
+                <div class="observation-grid">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+            `;
+            
+            currentActivity.characteristics.forEach(char => {
+                html += `<th>${char}</th>`;
+            });
+            
+            html += '<th class="total-column">Total</th></tr></thead><tbody>';
+            
+            students.forEach(student => {
+                if (!activityObs[student.id]) {
+                    activityObs[student.id] = {};
+                }
+                
+                html += `<tr><td><strong>${student.name}</strong></td>`;
+                
+                currentActivity.characteristics.forEach((char, index) => {
+                    const isChecked = activityObs[student.id][index] || false;
+                    html += `
+                        <td class="checkbox-cell">
+                            <input type="checkbox" 
+                                   ${isChecked ? 'checked' : ''} 
+                                   onchange="updateObservation('${currentActivity.id}', '${student.id}', ${index}, this.checked)"
+                                   aria-label="${char} for ${student.name}">
+                        </td>
+                    `;
+                });
+                
+                const total = Object.values(activityObs[student.id]).filter(v => v).length;
+                html += `<td class="checkbox-cell total-column">${total}</td></tr>`;
+            });
+            
+            html += `
+                </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="exportActivityObservations('${currentActivity.id}')">💾 Export This Activity (CSV)</button>
+                    <button class="btn btn-secondary" onclick="currentActivity = null; renderObservationGrid()">← Back to Activities</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // Update observation
+        function updateObservation(activityId, studentId, charIndex, checked) {
+            if (!observations[activityId]) {
+                observations[activityId] = {};
+            }
+            if (!observations[activityId][studentId]) {
+                observations[activityId][studentId] = {};
+            }
+            
+            observations[activityId][studentId][charIndex] = checked;
+            saveData();
+            renderObservationGrid();
+        }
+        
+        // Export activity observations as CSV
+        function exportActivityObservations(activityId) {
+            const activity = activities.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            const activityObs = observations[activityId] || {};
+            
+            let csv = 'Student Name,';
+            csv += activity.characteristics.join(',');
+            csv += ',Total Observed,Date\n';
+            
+            students.forEach(student => {
+                csv += `"${student.name}",`;
+                
+                activity.characteristics.forEach((char, index) => {
+                    const obs = activityObs[student.id] || {};
+                    csv += obs[index] ? 'Yes' : 'No';
+                    if (index < activity.characteristics.length - 1) {
+                        csv += ',';
+                    }
+                });
+                csv += ',';
+                
+                const studentObs = activityObs[student.id] || {};
+                const total = Object.values(studentObs).filter(v => v).length;
+                csv += `${total},"${activity.date}"\n`;
+            });
+            
+            downloadFile(csv, `${activity.name.replace(/\s+/g, '-')}-Observations.csv`, 'text/csv');
+        }
+        
+        // Export all data as JSON
+        function exportAllData() {
+            const data = {
+                students: students,
+                activities: activities,
+                observations: observations,
+                studentDocumentation: studentDocumentation,
+                exportDate: new Date().toISOString(),
+                version: '2.0'
+            };
+            
+            const json = JSON.stringify(data, null, 2);
+            const date = new Date().toISOString().split('T')[0];
+            downloadFile(json, `GiftedObservations-Backup-${date}.json`, 'application/json');
+        }
+        
+        // Export student summary
+        function exportStudentSummary() {
+            let csv = 'Student Name,Total Activities,Total Observations,Average per Activity\n';
+            
+            students.forEach(student => {
+                let totalAct = 0;
+                let totalObs = 0;
+                
+                activities.forEach(activity => {
+                    const actObs = observations[activity.id];
+                    if (actObs && actObs[student.id]) {
+                        totalAct++;
+                        totalObs += Object.values(actObs[student.id]).filter(v => v).length;
+                    }
+                });
+                
+                const avg = totalAct > 0 ? (totalObs / totalAct).toFixed(1) : 0;
+                csv += `"${student.name}",${totalAct},${totalObs},${avg}\n`;
+            });
+            
+            downloadFile(csv, 'Student-Summary.csv', 'text/csv');
+        }
+        
+        // Export activity report
+        function exportActivityReport() {
+            let csv = 'Activity Name,Subject,Date,Students Observed,Total Observations\n';
+            
+            activities.forEach(activity => {
+                const actObs = observations[activity.id] || {};
+                const studentsObserved = Object.keys(actObs).length;
+                let totalObs = 0;
+                
+                Object.values(actObs).forEach(studentObs => {
+                    totalObs += Object.values(studentObs).filter(v => v).length;
+                });
+                
+                csv += `"${activity.name}","${activity.subject}","${activity.date}",${studentsObserved},${totalObs}\n`;
+            });
+            
+            downloadFile(csv, 'Activity-Report.csv', 'text/csv');
+        }
+        
+        // Import data
+        // Import data
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+        
+        // Handle import
+        function handleImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    if (confirm('This will replace all current data. Are you sure you want to continue?')) {
+                        students = data.students || [];
+                        activities = data.activities || [];
+                        observations = data.observations || {};
+                        studentDocumentation = data.studentDocumentation || {};
+                        
+                        saveData();
+                        renderStudents();
+                        renderActivities();
+                        updateDashboard();
+                        renderStudentSummaries();
+                        
+                        alert('Data imported successfully!');
+                    }
+                } catch (error) {
+                    alert('Error importing data. Please make sure the file is a valid backup file.');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            e.target.value = '';
+        }
+        
+        // Render student summaries
+        function renderStudentSummaries() {
+            const container = document.getElementById('student-summaries');
+            
+            if (students.length === 0 || activities.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No observation data yet</p></div>';
+                return;
+            }
+            
+            let html = '';
+            
+            students.forEach(student => {
+                let totalObs = 0;
+                let activityCount = 0;
+                let activityList = [];
+                
+                activities.forEach(activity => {
+                    const actObs = observations[activity.id];
+                    if (actObs && actObs[student.id]) {
+                        const obs = Object.values(actObs[student.id]).filter(v => v).length;
+                        if (obs > 0) {
+                            activityCount++;
+                            totalObs += obs;
+                            activityList.push(`${activity.name}: ${obs}/${activity.characteristics.length}`);
+                        }
+                    }
+                });
+                
+                if (activityCount > 0) {
+                    html += `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">${student.name}</div>
+                                <div>${totalObs} total observations across ${activityCount} activities</div>
+                            </div>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                ${activityList.map(a => `<li>${a}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (html === '') {
+                container.innerHTML = '<div class="empty-state"><p>No observations recorded yet</p></div>';
+            } else {
+                container.innerHTML = html;
+            }
+        }
+        
+        // Helper: Download file
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('giftedTracker_students', JSON.stringify(students));
+            localStorage.setItem('giftedTracker_activities', JSON.stringify(activities));
+            localStorage.setItem('giftedTracker_observations', JSON.stringify(observations));
+            localStorage.setItem('giftedTracker_documentation', JSON.stringify(studentDocumentation));
+        }
+        
+        // Load data from localStorage
+        function loadData() {
+            const savedStudents = localStorage.getItem('giftedTracker_students');
+            const savedActivities = localStorage.getItem('giftedTracker_activities');
+            const savedObservations = localStorage.getItem('giftedTracker_observations');
+            const savedDocumentation = localStorage.getItem('giftedTracker_documentation');
+            
+            if (savedStudents) students = JSON.parse(savedStudents);
+            if (savedActivities) activities = JSON.parse(savedActivities);
+            if (savedObservations) observations = JSON.parse(savedObservations);
+            if (savedDocumentation) studentDocumentation = JSON.parse(savedDocumentation);
+        }
+        
+        // Open student documentation modal
+        function openStudentModal(studentId) {
+            currentStudent = students.find(s => s.id === studentId);
+            if (!currentStudent) return;
+            
+            // Initialize documentation for this student if needed
+            if (!studentDocumentation[studentId]) {
+                studentDocumentation[studentId] = {
+                    photos: [],
+                    notes: ''
+                };
+            }
+            
+            // Set modal title
+            document.getElementById('modalStudentName').textContent = currentStudent.name + ' - Documentation';
+            
+            // Load observation summary
+            renderObservationSummary(studentId);
+            
+            // Load photos
+            renderPhotoGallery(studentId);
+            
+            // Load notes
+            document.getElementById('studentNotes').value = studentDocumentation[studentId].notes || '';
+            
+            // Show modal
+            document.getElementById('studentModal').classList.add('active');
+        }
+        
+        // Close student modal
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.remove('active');
+            currentStudent = null;
+            currentDocPhoto = null;
+            document.getElementById('photoNote').value = '';
+            document.getElementById('docPhotoUpload').value = '';
+        }
+        
+        // Render observation summary for student
+        function renderObservationSummary(studentId) {
+            const container = document.getElementById('modalObservationSummary');
+            
+            let totalObs = 0;
+            let activityDetails = [];
+            
+            activities.forEach(activity => {
+                const actObs = observations[activity.id];
+                if (actObs && actObs[studentId]) {
+                    const obs = Object.values(actObs[studentId]).filter(v => v);
+                    const count = obs.length;
+                    
+                    if (count > 0) {
+                        totalObs += count;
+                        
+                        // Get which characteristics were observed
+                        const observedChars = [];
+                        Object.keys(actObs[studentId]).forEach(index => {
+                            if (actObs[studentId][index]) {
+                                observedChars.push(activity.characteristics[index]);
+                            }
+                        });
+                        
+                        activityDetails.push({
+                            name: activity.name,
+                            date: activity.date,
+                            count: count,
+                            total: activity.characteristics.length,
+                            characteristics: observedChars
+                        });
+                    }
+                }
+            });
+            
+            if (activityDetails.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: #6c757d; padding: 20px;">
+                        No observations recorded yet for this student
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <h4>Observation Summary</h4>
+                <p style="margin-bottom: 15px;"><strong>${totalObs}</strong> characteristics observed across <strong>${activityDetails.length}</strong> activities</p>
+            `;
+            
+            activityDetails.forEach(act => {
+                html += `
+                    <div class="activity-observation">
+                        <strong>${act.name}</strong> (${act.date})<br>
+                        <span style="color: #667eea;">${act.count}/${act.total} characteristics observed</span><br>
+                        <small style="color: #666;">${act.characteristics.slice(0, 3).join(', ')}${act.characteristics.length > 3 ? '...' : ''}</small>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Handle documentation photo upload
+        document.getElementById('docPhotoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentDocPhoto = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add documentation photo
+        function addDocumentationPhoto() {
+            if (!currentStudent) return;
+            
+            if (!currentDocPhoto) {
+                alert('Please select a photo first');
+                return;
+            }
+            
+            const note = document.getElementById('photoNote').value.trim();
+            
+            const photoDoc = {
+                id: 'photo_' + Date.now(),
+                photo: currentDocPhoto,
+                note: note,
+                date: new Date().toISOString()
+            };
+            
+            if (!studentDocumentation[currentStudent.id].photos) {
+                studentDocumentation[currentStudent.id].photos = [];
+            }
+            
+            studentDocumentation[currentStudent.id].photos.push(photoDoc);
+            
+            // Clear inputs
+            currentDocPhoto = null;
+            document.getElementById('photoNote').value = '';
+            document.getElementById('docPhotoUpload').value = '';
+            
+            saveData();
+            renderPhotoGallery(currentStudent.id);
+        }
+        
+        // Render photo gallery
+        function renderPhotoGallery(studentId) {
+            const gallery = document.getElementById('photoGallery');
+            const docs = studentDocumentation[studentId];
+            
+            if (!docs || !docs.photos || docs.photos.length === 0) {
+                gallery.innerHTML = '<div class="no-photos">No documentation photos yet</div>';
+                return;
+            }
+            
+            gallery.innerHTML = docs.photos.map(photo => `
+                <div class="photo-item">
+                    <button class="photo-delete" onclick="deleteDocPhoto('${studentId}', '${photo.id}')">&times;</button>
+                    <img src="${photo.photo}" alt="Documentation">
+                    <div class="photo-caption">
+                        <div style="font-size: 11px; color: #999; margin-bottom: 3px;">${new Date(photo.date).toLocaleDateString()}</div>
+                        ${photo.note ? `<div>${photo.note}</div>` : '<div style="font-style: italic;">No description</div>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Delete documentation photo
+        function deleteDocPhoto(studentId, photoId) {
+            if (confirm('Delete this photo?')) {
+                const docs = studentDocumentation[studentId];
+                docs.photos = docs.photos.filter(p => p.id !== photoId);
+                saveData();
+                renderPhotoGallery(studentId);
+            }
+        }
+        
+        // Save student notes
+        function saveStudentNotes() {
+            if (!currentStudent) return;
+            
+            const notes = document.getElementById('studentNotes').value.trim();
+            studentDocumentation[currentStudent.id].notes = notes;
+            
+            saveData();
+            alert('Notes saved!');
+        }
+        
+        // Export student documentation
+        function exportStudentDocumentation() {
+            if (!currentStudent) return;
+            
+            const studentId = currentStudent.id;
+            const studentName = currentStudent.name;
+            
+            // Gather all data for this student
+            const exportData = {
+                student: currentStudent,
+                documentation: studentDocumentation[studentId] || { photos: [], notes: '' },
+                observations: {}
+            };
+            
+            // Add observations from each activity
+            activities.forEach(activity => {
+                const actObs = observations[activity.id];
+                if (actObs && actObs[studentId]) {
+                    const observedChars = [];
+                    Object.keys(actObs[studentId]).forEach(index => {
+                        if (actObs[studentId][index]) {
+                            observedChars.push(activity.characteristics[index]);
+                        }
+                    });
+                    
+                    if (observedChars.length > 0) {
+                        exportData.observations[activity.name] = {
+                            date: activity.date,
+                            subject: activity.subject,
+                            characteristics: observedChars,
+                            total: `${observedChars.length}/${activity.characteristics.length}`
+                        };
+                    }
+                }
+            });
+            
+            // Create comprehensive CSV report
+            let csv = `Student Documentation Report\n`;
+            csv += `Student Name: "${studentName}"\n`;
+            csv += `Report Generated: ${new Date().toLocaleDateString()}\n\n`;
+            
+            csv += `OBSERVATION SUMMARY\n`;
+            csv += `Activity Name,Date,Subject,Observed Count,Characteristics Observed\n`;
+            
+            Object.keys(exportData.observations).forEach(actName => {
+                const obs = exportData.observations[actName];
+                csv += `"${actName}","${obs.date}","${obs.subject}","${obs.total}","${obs.characteristics.join('; ')}"\n`;
+            });
+            
+            csv += `\n\nDOCUMENTATION PHOTOS\n`;
+            csv += `Date,Description\n`;
+            if (exportData.documentation.photos) {
+                exportData.documentation.photos.forEach(photo => {
+                    csv += `"${new Date(photo.date).toLocaleDateString()}","${photo.note || 'No description'}"\n`;
+                });
+            }
+            
+            csv += `\n\nGENERAL NOTES\n`;
+            csv += `"${exportData.documentation.notes || 'No notes recorded'}"\n`;
+            
+            downloadFile(csv, `${studentName.replace(/\s+/g, '-')}-Documentation.csv`, 'text/csv');
+            
+            // Also export as JSON with photos
+            const json = JSON.stringify(exportData, null, 2);
+            downloadFile(json, `${studentName.replace(/\s+/g, '-')}-Documentation.json`, 'application/json');
+            
+            alert('Student documentation exported as CSV and JSON files!');
+        }
+        
+        // Allow Enter key to add student
+        document.getElementById('studentName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addStudent();
+            }
+        });
+    </script>
+</body>
+</html>
